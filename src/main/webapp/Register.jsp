@@ -1,276 +1,260 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký tài khoản - ABC News</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng ký Tài khoản - Góc Nhìn Báo Chí</title>
     
+    <%-- 1. Thêm Bootstrap CSS --%>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    
+    <%-- 2. Thêm Google Fonts --%>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <%-- 3. Thêm Font Awesome (Icon) --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <%-- 4. CSS Tùy chỉnh (Giống Login.jsp) --%>
     <style>
-    /* VARIABLES */
-    :root {
-        --primary-red: #d00000;
-        --dark-red: #a30000;
-        --light-bg: #f7f9fc;
-        --shadow-color: rgba(0, 0, 0, 0.05);
-        --transition-speed: 0.3s;
-    }
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: var(--light-bg);
-    }
-
-    /* 1. Header (giữ nguyên layout, làm gọn gàng hơn) */
-    .header {
-        display: flex; 
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 30px; 
-        background-color: #ffffff; 
-        border-bottom: 3px solid var(--primary-red); /* Dải đỏ nổi bật */
-        height: 80px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-    .header-image {
-        height: 100px; /* Giảm kích thước ảnh một chút */
-        width: auto;
-    }
-    .header-login a {
-        color: var(--primary-red);
-        text-decoration: none;
-        font-weight: 500;
-        padding: 8px 15px;
-        border: 1px solid var(--primary-red);
-        border-radius: 6px;
-        transition: var(--transition-speed);
-    }
-    .header-login a:hover {
-        background-color: var(--primary-red);
-        color: white;
-    }
-
-    /* 2. Main Content & Form Container */
-    .page-main {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* Điều chỉnh chiều cao cho linh hoạt hơn */
-        min-height: calc(100vh - 160px); 
-        padding: 40px 20px;
-    }
-
-    .form-container {
-        width: 100%;
-        max-width: 480px; /* Tăng chiều rộng form để thoáng hơn */
-        padding: 45px; 
-        background-color: #fff;
-        border-radius: 16px; /* Cong hơn */
-        /* Tạo bóng đổ hiện đại và sâu */
-        box-shadow: 0 15px 40px var(--shadow-color), 0 0 10px rgba(0, 0, 0, 0.03);
-        transition: transform 0.3s ease-out;
-    }
-    .form-container:hover {
-        transform: translateY(-2px); /* Hiệu ứng nâng nhẹ */
-    }
-
-    .form-container h2 {
-        text-align: center;
-        color: var(--primary-red);
-        margin-bottom: 35px;
-        font-size: 2em; /* Tiêu đề lớn hơn */
-        font-weight: 900;
-        font-family: 'Merriweather', serif; /* Dùng font Merriweather cho tiêu đề */
-    }
-    .form-container h2::after {
-        content: '';
-        display: block;
-        width: 70px;
-        height: 4px; /* Dày hơn */
-        background-color: var(--primary-red);
-        margin: 10px auto 0;
-        border-radius: 3px;
-    }
-
-    /* 3. Input Groups */
-    .form-group {
-        margin-bottom: 25px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 500;
-        color: #333;
-        font-size: 1em;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="password"],
-    .form-group input[type="email"] { 
-        width: 100%;
-        padding: 14px 18px; /* Padding lớn hơn */
-        border: 2px solid #e0e0e0; /* Border màu nhẹ hơn */
-        border-radius: 8px; 
-        box-sizing: border-box;
-        font-size: 1em;
-        transition: all var(--transition-speed);
-    }
-    /* Hiệu ứng focus sinh động */
-    .form-group input:focus {
-        border-color: var(--primary-red);
-        box-shadow: 0 0 0 4px rgba(208, 0, 0, 0.2); /* Tạo hiệu ứng 'Ring' */
-        outline: none;
-        background-color: #fffafb; /* Nền nhạt khi focus */
-    }
-
-    /* 4. Submit Button (Thiết kế lại hoàn toàn) */
-    .submit-button {
-        width: 100%;
-        padding: 16px;
-        background-image: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.25em;
-        font-weight: 700;
-        letter-spacing: 0.7px;
-        margin-top: 20px;
-        box-shadow: 0 4px 15px rgba(208, 0, 0, 0.3);
-        transition: all 0.2s ease-in-out;
-    }
-    .submit-button:hover {
-        /* Đổi màu gradient khi hover */
-        background-image: linear-gradient(135deg, var(--dark-red) 0%, #7d0000 100%);
-        box-shadow: 0 6px 20px rgba(208, 0, 0, 0.5);
-        transform: translateY(-1px);
-    }
-    .submit-button:active {
-        transform: scale(0.98) translateY(1px);
-        box-shadow: 0 2px 10px rgba(208, 0, 0, 0.3);
-    }
-    
-    /* 5. Alt Link & Messages */
-    .alt-link {
-        text-align: center;
-        margin-top: 30px;
-        font-size: 0.95em;
-        color: #666;
-    }
-    .alt-link a {
-        color: var(--primary-red);
-        text-decoration: none;
-        font-weight: 600;
-        transition: color var(--transition-speed);
-    }
-    .alt-link a:hover {
-        color: var(--dark-red);
-        text-decoration: underline;
-    }
-    .error-message, .success-message {
-        font-size: 0.9em;
-        padding: 12px;
-        margin-bottom: 20px;
-        border-radius: 6px;
-        font-weight: 500;
-        border-left: 5px solid;
-    }
-    .error-message {
-        color: var(--dark-red);
-        background-color: #ffeaea;
-        border-color: var(--primary-red);
-    }
-    .success-message {
-        color: #006400;
-        background-color: #e6ffe6;
-        border-color: #006400;
-    }
-
-    /* 6. Responsive adjustments */
-    @media (max-width: 600px) {
-        .form-container {
-            padding: 30px 20px;
-            margin: 0 10px;
+        /* GLOBAL: Font, Nền Glassmorphism */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-image: url('img/bacgroundLogin.jpg'); 
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
         }
-        .form-container h2 {
-            font-size: 1.7em;
+        body {
+            display: flex;
+            flex-direction: column;
         }
-        .header {
-            padding: 10px 15px;
-            height: auto;
+
+        /* MAIN CONTENT: Căn giữa */
+        .main-content {
+            flex-grow: 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            padding: 20px;
         }
-        .header-image {
+
+        /* REGISTER CARD: TĂNG CHIỀU RỘNG VÀ ĐỘ DÀY CHO FORM ĐĂNG KÝ */
+        .register-card {
+            width: 500px;
+            max-width: 450px; /* Tăng nhẹ chiều rộng so với Login */
+            padding: 40px; 
+            border-radius: 18px; 
+            
+            /* Hiệu ứng Frosted Glass */
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            
+            /* Border và Shadow */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            animation: slideUp 0.7s ease-out; 
+        }
+        
+        /* LOGO, INPUT, TEXT: Giữ nguyên từ Login.jsp */
+        #login-logo {
+            display: block; 
+            width: 80px; 
             height: 80px;
+            margin: 0 auto 20px auto; 
+            border-radius: 50%; 
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.6); 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
         }
-    }
+
+        .register-card h2 { /* Đổi tên class tiêu đề */
+            text-align: center;
+            color: #ffffff; 
+            margin-bottom: 30px; 
+            font-weight: 700;
+            font-size: 2.2rem; /* Giảm nhẹ font size */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* INPUT FIELDS (Giữ nguyên) */
+        .input-group-custom {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #333333; 
+            z-index: 2; 
+            font-size: 1.1em;
+        }
+        .form-label {
+            font-weight: 600; 
+            font-size: 1.05em;
+            color: #ffffff; 
+        }
+        .form-control {
+            padding: 12px 15px 12px 45px; 
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            background-color: rgba(255, 255, 255, 0.1); 
+            color: #ffffff; 
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7); 
+        }
+        .form-control:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2); 
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* NÚT ĐĂNG KÝ: Thay đổi màu sắc và hiệu ứng nhẹ nhàng hơn */
+        .btn-brand-secondary {
+            background: rgba(180, 255, 255, 0.15); /* Màu xanh nhạt mờ */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: #ffffff;
+            padding: 14px;
+            font-size: 1.15em;
+            font-weight: 700;
+            border-radius: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 18px rgba(0, 255, 255, 0.1);
+            transition: 0.3s ease;
+        }
+
+        .btn-brand-secondary:hover {
+            background: rgba(180, 255, 255, 0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 255, 255, 0.2);
+        }
+        
+        /* LINK ĐĂNG NHẬP (Giữ nguyên) */
+        .alt-link-text {
+            color: #ffffff; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .alt-link-text a {
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .alt-link-text a:hover {
+             color: #333333; 
+             text-decoration: none;
+        }
+
+        /* THÔNG BÁO LỖI (Giữ nguyên) */
+        .alert-error {
+            color: #FFEDCC; 
+            background-color: rgba(255, 0, 0, 0.3); 
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .alert-success-custom {
+            color: #ffffff; 
+            background-color: rgba(0, 128, 0, 0.4); 
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
     
-    <header class="header">
-        <!-- Đảm bảo đường dẫn hình ảnh đúng -->
-        <img src="${pageContext.request.contextPath}/img/lgo.png" alt="Logo ABC News" class="header-image">
-        <div class="header-login">
-            <a href="${pageContext.request.contextPath}">Về Trang Chủ</a>
+    <%-- Main Content (Phần chứa Form Glassmorphism) --%>
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="register-card"> <%-- Thay đổi class card --%>
+                        
+                        <%-- LOGO --%>
+                        <img id="login-logo" src="img/lgo.png" alt="Logo" onerror="this.onerror=null;this.src='https://placehold.co/60x60/2a3a5e/ffffff?text=LOGO'">
+                        
+                        <h2 class="mb-4">Đăng ký Tài khoản</h2>
+                        
+                        <form action="${pageContext.request.contextPath}/register" method="POST"> 
+                            
+                            <%-- Trường Họ và Tên --%>
+                            <div class="mb-3">
+                                <label for="fullname" class="form-label">Họ và Tên:</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" id="fullname" name="fullname" class="form-control" required placeholder="Nhập Họ và Tên">
+                                </div>
+                            </div>
+
+                            <%-- Trường Email --%>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" id="email" name="email" class="form-control" required placeholder="Nhập địa chỉ Email">
+                                </div>
+                            </div>
+                            
+                            <%-- Trường Mật khẩu --%>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu:</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" id="password" name="password" class="form-control" required placeholder="Mật khẩu tối thiểu 6 ký tự">
+                                </div>
+                            </div>
+                            
+                            <%-- Trường Xác nhận Mật khẩu --%>
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label">Xác nhận Mật khẩu:</label>
+                                <div class="input-group-custom">
+                                    <i class="fas fa-key input-icon"></i>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required placeholder="Xác nhận lại mật khẩu">
+                                </div>
+                            </div>
+                                           
+                            <button type="submit" class="btn btn-brand-secondary w-100">ĐĂNG KÝ</button>
+                            
+                            <div class="text-center mt-4 alt-link-text">
+                                <p class="mb-0">Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập ngay</a></p>            
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
+    </div>
+    
+    
+<%-- Logic Hiển thị Alert Pop-up dựa trên Request Scope --%>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ĐỌC THÔNG BÁO LỖI (từ forward của doPost khi kiểm tra lỗi)
+        var errorMessage = '${requestScope.error}'; 
+        
+        // ĐỌC THÔNG BÁO THÀNH CÔNG ĐĂNG KÝ (Không áp dụng ở đây, nó sẽ redirect)
+        
+        // Hiển thị LỖI (Ví dụ: Mật khẩu không khớp, Email đã tồn tại)
+        if (errorMessage && errorMessage.trim() !== '') {
+            alert(errorMessage); 
+        } 
+    });
+</script>
+    
+<%-- 4. Thêm Bootstrap JS --%>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
-    <jsp:include page="/menu.jsp" />
-
-    <main class="page-main">
-        <div class="form-container">
-            <h2>Đăng ký Tài khoản</h2>
-            
-            <form action="${pageContext.request.contextPath}/register" method="POST"> 
-                
-                <%-- Hiển thị lỗi/thành công --%>
-                <c:if test="${not empty requestScope.error}">
-                    <p class="error-message">${requestScope.error}</p>
-                </c:if>
-                <c:if test="${not empty requestScope.success}">
-                    <p class="success-message">${requestScope.success}</p>
-                </c:if>
-
-                <div class="form-group">
-                    <label for="fullname">Họ và Tên:</label>
-                    <input type="text" id="fullname" name="fullname" required 
-                           placeholder="Nhập họ và tên đầy đủ của bạn">
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <!-- ĐÃ SỬA: Đảm bảo name cho email là 'email' -->
-                    <input type="email" id="email" name="email" required
-                           placeholder="Ví dụ: hoten@example.com">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Mật khẩu:</label>
-                    <input type="password" id="password" name="password" required
-                           placeholder="Ít nhất 6 ký tự">
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmPass">Xác nhận Mật khẩu:</label>
-                    <input type="password" id="confirmPass" name="confirmPassword" required
-                           placeholder="Nhập lại mật khẩu">
-                </div>
-                               
-                <button type="submit" class="submit-button">Tạo Tài Khoản </button>
-                
-                <div class="alt-link">
-                    <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập tại đây</a></p>
-                </div>
-                
-            </form>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <p>Góc Nhìn Báo Chí</p>
-    </footer>
-</body>
+</body> 
 </html>

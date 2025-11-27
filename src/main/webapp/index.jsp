@@ -31,14 +31,55 @@
     </style>
 </head>
 <body>
-    <header class="header">
-    	<img src="img/lgo.png" alt="Logo ABC News" class="header-image">
+<%-- index.jsp (Đảm bảo có dòng taglib ở trên cùng) --%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+<%-- Đặt phần này ở cuối index.jsp, trước </body> --%>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ĐỌC TRỰC TIẾP TỪ SESSION (Đã được đặt trong doPost)
+        var successMessage = '${sessionScope.flashMessage}'; 
         
-        <div class="header-login">
-            <a href="${pageContext.request.contextPath}/login">Đăng nhập</a>
-        </div>
+        if (successMessage && successMessage.trim() !== '') {
+            alert(successMessage); 
+        }
+    });
+</script>
+
+<%-- BẮT BUỘC: Xóa thông báo khỏi Session sau khi hiển thị --%>
+<c:remove var="flashMessage" scope="session"/>
+<c:remove var="flashError" scope="session"/>	
+    <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%-- Giả sử đây là phần Header của trang index.jsp hoặc Admin Page --%>
+
+<header class="header">
+    <img src="${pageContext.request.contextPath}/img/lgo.png" alt="Logo" class="header-image">
+    
+    <div class="header-login">
         
-    </header>
+        <c:choose>
+            <%-- KIỂM TRA: Nếu sessionScope.currentUser tồn tại (đã đăng nhập) --%>
+            <c:when test="${not empty sessionScope.currentUser}">
+                <%-- Hiển thị tên người dùng và nút ĐĂNG XUẤT --%>
+                <span style="font-weight: 500; margin-right: 15px;">
+                    Xin chào, ${sessionScope.currentUser.fullname}!
+                </span>
+                <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger btn-sm">
+                    Đăng xuất
+                </a>
+            </c:when>
+            
+            <%-- NGƯỢC LẠI: Chưa đăng nhập --%>
+            <c:otherwise>
+                <%-- Hiển thị nút ĐĂNG NHẬP (Link chuyển hướng) --%>
+                <a href="${pageContext.request.contextPath}/login" class="btn btn-primary btn-sm">
+                    Đăng nhập
+                </a>
+            </c:otherwise>
+        </c:choose>
+        
+    </div>
+</header>
 
     <jsp:include page="menu.jsp" />
 
@@ -65,12 +106,18 @@
             </article>
             
         </section>
-
-        <jsp:include page="sidebar.jsp"/>
-    </main>
-
-    <footer class="footer">
-        <p>Góc Nhìn Báo Chí</p>
-    </footer>
+		   <%-- Trong index.jsp --%>
+		<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+		<c:remove var="flashMessage" scope="session"/>
+		<c:remove var="flashError" scope="session"/>
+		        <jsp:include page="sidebar.jsp"/>
+		    </main>
+		
+		    <footer class="footer">
+		        <p>Góc Nhìn Báo Chí</p>
+		    </footer>
+    
+    
+ 
 </body>
 </html>
