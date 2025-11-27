@@ -6,6 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng ký Tài khoản - Góc Nhìn Báo Chí</title>
+<<<<<<< HEAD
+=======
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
     
     <%-- 1. Thêm Bootstrap CSS --%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -46,7 +55,11 @@
         /* REGISTER CARD: TĂNG CHIỀU RỘNG VÀ ĐỘ DÀY CHO FORM ĐĂNG KÝ */
         .register-card {
             width: 500px;
+<<<<<<< HEAD
             max-width: 450px; /* Tăng nhẹ chiều rộng so với Login */
+=======
+            max-width: 450px; 
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
             padding: 40px; 
             border-radius: 18px; 
             
@@ -72,6 +85,7 @@
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.6); 
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+<<<<<<< HEAD
         }
 
         .register-card h2 { /* Đổi tên class tiêu đề */
@@ -170,6 +184,106 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+=======
+        }
+
+        .register-card h2 { 
+            text-align: center;
+            color: #ffffff; 
+            margin-bottom: 30px; 
+            font-weight: 700;
+            font-size: 2.2rem; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* INPUT FIELDS (Giữ nguyên) */
+        .input-group-custom {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: black; /* Sửa lại màu trắng để hiển thị tốt hơn trên nền tối */
+            z-index: 2; 
+            font-size: 1.1em;
+        }
+        .form-label {
+            font-weight: 600; 
+            font-size: 1.05em;
+            color: black; 
+        }
+        .form-control {
+            padding: 12px 15px 12px 45px; 
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            background-color: rgba(255, 255, 255, 0.1); 
+            color: black; 
+        }
+        .form-control::placeholder {
+            color: black; 
+        }
+        .form-control:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2); 
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* NÚT ĐĂNG KÝ: Thay đổi màu sắc và hiệu ứng nhẹ nhàng hơn */
+        .btn-brand-secondary {
+            background: rgba(180, 255, 255, 0.15); 
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: black;
+            padding: 14px;
+            font-size: 1.15em;
+            font-weight: 700;
+            border-radius: 12px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 18px rgba(0, 255, 255, 0.1);
+            transition: 0.3s ease;
+        }
+
+        .btn-brand-secondary:hover {
+            background: rgba(180, 255, 255, 0.3); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 255, 255, 0.2);
+        }
+        
+        /* LINK ĐĂNG NHẬP (Giữ nguyên) */
+        .alt-link-text {
+            color: #ffffff; 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .alt-link-text a {
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+        .alt-link-text a:hover {
+             color: #333333; /* Sửa lại màu hover */
+             text-decoration: none;
+        }
+
+        .alert-error {
+            color: #fff; 
+            background-color: rgba(255, 0, 0, 0.5); 
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .h2 {
+        
+        color:black;
+        
+        }
+        
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
     </style>
 </head>
 <body>
@@ -179,12 +293,27 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-auto">
+<<<<<<< HEAD
                     <div class="register-card"> <%-- Thay đổi class card --%>
+=======
+                    <div class="register-card"> 
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
                         
                         <%-- LOGO --%>
                         <img id="login-logo" src="img/lgo.png" alt="Logo" onerror="this.onerror=null;this.src='https://placehold.co/60x60/2a3a5e/ffffff?text=LOGO'">
                         
+<<<<<<< HEAD
                         <h2 class="mb-4">Đăng ký Tài khoản</h2>
+=======
+                        <h2 class="mb-4">Đăng Ký Tài Khoản</h2>
+                        
+                        <%-- 🔥 HIỂN THỊ LỖI ĐĂNG KÝ (Mật khẩu không khớp/Email đã tồn tại) --%>
+                        <c:if test="${not empty requestScope.error}">
+                            <div class="alert alert-error mb-3" role="alert">
+                                ${requestScope.error}
+                            </div>
+                        </c:if>
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
                         
                         <form action="${pageContext.request.contextPath}/register" method="POST"> 
                             
@@ -238,6 +367,7 @@
     </div>
     
     
+<<<<<<< HEAD
 <%-- Logic Hiển thị Alert Pop-up dựa trên Request Scope --%>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -254,6 +384,9 @@
 </script>
     
 <%-- 4. Thêm Bootstrap JS --%>
+=======
+<%-- 🔥 ĐOẠN SCRIPT CŨ GÂY POP-UP ĐÃ ĐƯỢC XÓA BỎ --%>
+>>>>>>> 1f2318a6134876182ac97f9a1301b0991db199fe
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 </body> 
