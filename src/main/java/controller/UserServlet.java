@@ -2,7 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException; // Cần import SQLException cho phần xử lý lỗi
+import java.sql.SQLException;
 
 import DAO.UserDAO;
 import Entity.User;
@@ -13,13 +13,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession; 
 
 @WebServlet({ "/login", "/register", "/logout" })
 public class UserServlet extends HttpServlet {
 	
-	// Định nghĩa các mã vai trò để dễ quản lý
 	private static final int ROLE_READER = 0;
-	private static final int ROLE_MANAGER = 1; // Thêm vai trò Quản lý
+	private static final int ROLE_MANAGER = 1;
 	private static final int ROLE_ADMIN = 2;
 
 	private UserDAO dao;
@@ -30,7 +30,6 @@ public class UserServlet extends HttpServlet {
 			Connection conn = DBConnection.getConnection();
 			dao = new UserDAO(conn);
 		} catch (Exception e) {
-			// In stack trace để dễ debug lỗi kết nối
 			e.printStackTrace(); 
 			throw new ServletException("Không thể kết nối MySQL", e);
 		}
@@ -40,46 +39,54 @@ public class UserServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String uri = req.getRequestURI();
 		if (uri.endsWith("/login")) {
+			// Forward tới Login.jsp. Các thông báo từ Session (sau khi đăng ký/đăng xuất) 
+			// sẽ được xử lý hiển thị ở Login.jsp
 			req.getRequestDispatcher("Login.jsp").forward(req, resp);
 		} else if (uri.endsWith("/register")) {
 			req.getRequestDispatcher("Register.jsp").forward(req, resp);
 		} else if (uri.endsWith("/logout")) {
-			req.getSession().invalidate();
+			// Đăng xuất: Xóa Session và chuyển về trang đăng nhập
+			// Lưu Flash Message Đăng xuất thành công vào Session
+			req.getSession().setAttribute("successMessage", "Bạn đã đăng xuất thành công!");
+			req.getSession().invalidate(); // Hủy toàn bộ Session trừ các thuộc tính mới đặt (nếu dùng Tomcat 8+). 
+			                             // CÁCH TỐT NHẤT LÀ DÙNG setAttribute TRƯỚC VÀ REDIRECT.
 			resp.sendRedirect(req.getContextPath() + "/login");
 		}
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// Thiết lập UTF-8 để xử lý tiếng Việt
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
 		
 		String uri = req.getRequestURI();
 		try {
 			if (uri.endsWith("/login")) {
-				String email = req.getParameter("email").trim(); // Sử dụng trim()
+				String email = req.getParameter("email").trim();
 				String password = req.getParameter("password").trim();
 
 				User u = dao.findByEmail(email);
 				
-				// Lưu ý: Cần mã hóa mật khẩu ở đây thay vì so sánh trực tiếp
 				if (u != null && u.getPassword().equals(password)) { 
-					req.getSession().setAttribute("currentUser", u);
+					HttpSession session = req.getSession();
 					
-					// Phân quyền dựa trên Mã Vai trò (int)
-					if (u.getRole() == ROLE_READER) {
-						resp.sendRedirect(req.getContextPath() + "/index.jsp"); // Độc giả về trang chủ
-					} else if (u.getRole() == ROLE_MANAGER) {
-						resp.sendRedirect(req.getContextPath() + "/index.jsp"); // Quản lý sang trang chủ
-					} else if (u.getRole() == ROLE_ADMIN) {
-						resp.sendRedirect(req.getContextPath() + "/admin");
-						return;
+					// 🔥 QUAN TRỌNG: SỬA TÊN BIẾN SESSION KHỚP VỚI JSTL TRONG index.jsp
+					session.setAttribute("loggedInUser", u);
+					
+					// THÊM: Flash Message để hiển thị thông báo trên index.jsp
+					session.setAttribute("flashMessage", "Đăng nhập thành công! Chào mừng, " + u.getFullname() + "!");
+					
+					// Chuyển hướng về trang tương ứng
+					if (u.getRole() == ROLE_ADMIN) {
+						// Chuyển hướng về trang Admin
+						resp.sendRedirect(req.getContextPath() + "/admin"); 
 					} else {
-						// Role không xác định (fallback)
-						resp.sendRedirect(req.getContextPath() + "/index.jsp");
+						// Chuyển hướng về trang chủ
+						resp.sendRedirect(req.getContextPath() + "/index.jsp"); 
 					}
+					return;
 				} else {
+					// Đăng nhập thất bại: Forward lại trang Login và gửi lỗi
 					req.setAttribute("error", "Sai email hoặc mật khẩu!");
 					req.getRequestDispatcher("Login.jsp").forward(req, resp);
 				}
@@ -90,44 +97,36 @@ public class UserServlet extends HttpServlet {
 				String password = req.getParameter("password");
 				String confirm = req.getParameter("confirmPassword");
 				
-				// 1. Kiểm tra confirm password
 				if (!password.equals(confirm)) {
 					req.setAttribute("error", "Mật khẩu xác nhận không khớp!");
 					req.getRequestDispatcher("Register.jsp").forward(req, resp);
 					return;
 				}
 
-				// 2. Kiểm tra email trùng
 				if (dao.findByEmail(email) != null) {
 					req.setAttribute("error", "Email đã được sử dụng!");
 					req.getRequestDispatcher("Register.jsp").forward(req, resp);
-					return; // Thêm return để dừng xử lý
+					return; 
 				} 
 				
-				// 3. Thực hiện Đăng ký
+				// Thực hiện Đăng ký
 				User u = new User();
 				u.setFullname(fullname);
 				u.setEmail(email);
-				u.setPassword(password); // LƯU Ý: Nên HASH mật khẩu trước khi lưu
-				u.setRole(ROLE_READER); // Đã sửa: Mặc định gán mã số 0 cho Độc giả
-				
+				u.setPassword(password);
+				u.setRole(ROLE_READER);
 				dao.insert(u);
 				
-				// Đăng ký thành công, chuyển sang trang đăng nhập
-				req.setAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
-				req.getRequestDispatcher("Login.jsp").forward(req, resp);
+				// Lưu thông báo thành công vào Session và REDIRECT về trang Login
+				req.getSession().setAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+				resp.sendRedirect(req.getContextPath() + "/login");
 			}
 		} catch (SQLException e) {
-		    // Xử lý lỗi SQL cụ thể
 		    e.printStackTrace();
-		    req.setAttribute("error", "Lỗi cơ sở dữ liệu trong quá trình xử lý: " + e.getMessage());
-		    if (uri.endsWith("/login")) {
-		        req.getRequestDispatcher("Login.jsp").forward(req, resp);
-		    } else if (uri.endsWith("/register")) {
-		        req.getRequestDispatcher("Register.jsp").forward(req, resp);
-		    }
+		    req.setAttribute("error", "Lỗi cơ sở dữ liệu: " + e.getMessage());
+		    String target = uri.endsWith("/login") ? "Login.jsp" : "Register.jsp";
+		    req.getRequestDispatcher(target).forward(req, resp);
 		} catch (Exception e) {
-			// Xử lý các lỗi khác
 			e.printStackTrace();
 			throw new ServletException(e);
 		}
